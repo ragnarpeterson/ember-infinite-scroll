@@ -1,5 +1,4 @@
 import Em from 'ember';
-import DS from 'ember-data';
 
 var $window = Em.$(window),
     $document = Em.$(document),
@@ -37,20 +36,13 @@ export default Em.Component.extend({
   },
 
   fetchDidSucceed: function(response) {
+    var content = Em.get(response, 'content') || response;
     this.set('isFetching', false);
-    this.get('content').pushObjects(this.itemsFrom(response));
+    this.get('content').pushObjects(content);
   },
 
   fetchDidFail: function() {
     this.set('isFetching', false);
-  },
-
-  itemsFrom: function(response) {
-    if(response instanceof DS.RecordArray) {
-      return response.get('content');
-    } else {
-      return response;
-    }
   },
 
   isNearBottom: function() {
