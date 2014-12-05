@@ -23,7 +23,7 @@ export default Em.Component.extend({
 
   didScroll: function() {
     if (this.isNearBottom() && this.get('hasMore') && !this.get('isFetching')) {
-      this.set('isFetching', true);
+      this.safeSet('isFetching', true);
       this.sendAction('action', bind(this, this.handleFetch));
     }
   },
@@ -37,12 +37,12 @@ export default Em.Component.extend({
 
   fetchDidSucceed: function(response) {
     var content = Em.get(response, 'content') || response;
-    this.set('isFetching', false);
+    this.safeSet('isFetching', false);
     this.get('content').pushObjects(content);
   },
 
   fetchDidFail: function() {
-    this.set('isFetching', false);
+    this.safeSet('isFetching', false);
   },
 
   isNearBottom: function() {
@@ -50,5 +50,9 @@ export default Em.Component.extend({
         bottomTop = ($document.height() - $window.height());
 
     return viewPortTop && (bottomTop - viewPortTop) < this.get('epsilon');
+  },
+
+  safeSet: function(key, value) {
+    if (!this.isDestroyed) { this.set(key, value); }
   }
 });
