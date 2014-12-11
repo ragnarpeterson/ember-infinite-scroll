@@ -22,7 +22,7 @@ export default Em.Component.extend({
   }.on('willDestroyElement'),
 
   didScroll: function() {
-    if (this.isNearBottom() && this.get('hasMore') && !this.get('isFetching')) {
+    if (!this.get('isFetching') && this.get('hasMore') && this.isNearBottom()) {
       this.safeSet('isFetching', true);
       this.sendAction('action', bind(this, this.handleFetch));
     }
