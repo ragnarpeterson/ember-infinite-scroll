@@ -11,12 +11,17 @@ Infinite scroll for your Ember app.
 In your template:
 
 ```hbs
+<ul>
+  {{#each}}
+    <li>{{name}}</li>
+  {{/each}}
+</ul>
 {{#infinite-scroll content=model hasMore=hasMore}}
   <span>Loading...</span>
 {{/infinite-scroll}}
 ```
 
-Whatever is provided in the component block will only show up when more content is being fetched.
+Simply display your list of items as you normally would and then add the `infinite-scroll` component directly after. Whatever is provided in the component block will only show up when more content is being fetched.
 
 In the actions hash of your route/controller/component:
 
