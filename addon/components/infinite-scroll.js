@@ -36,9 +36,11 @@ export default Em.Component.extend({
   },
 
   fetchDidSucceed: function(response) {
-    var content = Em.get(response, 'content') || response;
+    var content = this.get('content'),
+        newContent = Em.getWithDefault(response, 'content', response);
+
     this.safeSet('isFetching', false);
-    this.get('content').pushObjects(content);
+    if (content) { content.pushObjects(newContent); }
   },
 
   fetchDidFail: function() {
