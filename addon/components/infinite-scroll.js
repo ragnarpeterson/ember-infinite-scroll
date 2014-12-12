@@ -14,11 +14,11 @@ export default Em.Component.extend({
   content: null,
 
   setup: function() {
-    $window.on('scroll', bind(this, this.didScroll));
+    $window.on('scroll.' + this.elementId, bind(this, this.didScroll));
   }.on('didInsertElement'),
 
   teardown: function() {
-    $window.off('scroll', bind(this, this.didScroll));
+    $window.off('scroll.' + this.elementId);
   }.on('willDestroyElement'),
 
   didScroll: function() {
@@ -55,6 +55,6 @@ export default Em.Component.extend({
   },
 
   safeSet: function(key, value) {
-    if (!this.isDestroyed) { this.set(key, value); }
+    if (!this.isDestroyed && !this.isDestroying) { this.set(key, value); }
   }
 });
