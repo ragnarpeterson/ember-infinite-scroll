@@ -4,7 +4,10 @@ Infinite scroll for your Ember app.
 
 ## Installation
 
-* `npm install --save ember-infinite-scroll`
+```bash
+# From within your ember-cli project
+ember install:addon ember-infinite-scroll
+```
 
 ## Usage
 
