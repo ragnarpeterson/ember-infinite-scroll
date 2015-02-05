@@ -36,3 +36,5 @@ fetchMore: function(callback) {
 ```
 
 In order for everything to work correctly, it is critical that the callback function is passed the newly created promise that will resolve with the additional items.
+
+If you don't need to asynchronously	request more data, you may want to follow [this suggestion](https://github.com/jasonkriss/ember-infinite-scroll/issues/5) by [@SirZach](https://github.com/SirZach).
