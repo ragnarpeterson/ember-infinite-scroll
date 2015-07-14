@@ -37,4 +37,17 @@ fetchMore: function(callback) {
 
 In order for everything to work correctly, it is critical that the callback function is passed the newly created promise that will resolve with the additional items.
 
+If you need the scrollable element to be something other than `window`, just pass the element's selector as the `scrollable` option:
+
+```hbs
+<ul>
+  {{#each}}
+    <li>{{name}}</li>
+  {{/each}}
+</ul>
+{{#infinite-scroll content=model hasMore=hasMore scrollable='#scrollable'}}
+  <span>Loading...</span>
+{{/infinite-scroll}}
+```
+
 If you don't need to asynchronously	request more data, you may want to follow [this suggestion](https://github.com/jasonkriss/ember-infinite-scroll/issues/5) by [@SirZach](https://github.com/SirZach).

@@ -12,13 +12,19 @@ export default Em.Component.extend({
   isFetching: false,
   hasMore: null,
   content: null,
+  scrollable: null,
+  $scrollable: null,
 
   setup: function() {
-    $window.on('scroll.' + this.elementId, bind(this, this.didScroll));
+    var scrollable = this.get('scrollable'),
+        $scrollable = scrollable ? Em.$(scrollable) : $window;
+
+    this.set('$scrollable', $scrollable);
+    $scrollable.on('scroll.' + this.elementId, bind(this, this.didScroll));
   }.on('didInsertElement'),
 
   teardown: function() {
-    $window.off('scroll.' + this.elementId);
+    this.get('$scrollable').off('scroll.' + this.elementId);
   }.on('willDestroyElement'),
 
   didScroll: function() {
@@ -48,8 +54,16 @@ export default Em.Component.extend({
   },
 
   isNearBottom: function() {
-    var viewPortTop = $document.scrollTop(),
-        bottomTop = ($document.height() - $window.height());
+    var $scrollable = this.get('$scrollable'),
+        viewPortTop, bottomTop;
+
+    if ($scrollable === $window) {
+      viewPortTop = $document.scrollTop(),
+      bottomTop = $document.height() - $window.height();
+    } else {
+      viewPortTop = $scrollable.scrollTop(),
+      bottomTop = $scrollable[0].scrollHeight - $scrollable.innerHeight();
+    }
 
     return viewPortTop && (bottomTop - viewPortTop) < this.get('epsilon');
   },
