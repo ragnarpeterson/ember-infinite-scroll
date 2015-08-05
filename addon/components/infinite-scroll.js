@@ -21,6 +21,10 @@ export default Em.Component.extend({
 
     this.set('$scrollable', $scrollable);
     $scrollable.on('scroll.' + this.elementId, bind(this, this.didScroll));
+
+    if (this.isInView()) {
+      this.startFetching();
+    }
   }.on('didInsertElement'),
 
   teardown: function() {
@@ -28,7 +32,13 @@ export default Em.Component.extend({
   }.on('willDestroyElement'),
 
   didScroll: function() {
-    if (!this.get('isFetching') && this.get('hasMore') && this.isNearBottom()) {
+    if (this.isInView() || this.isNearBottom()) {
+      this.startFetching();
+    }
+  },
+
+  startFetching: function() {
+    if (!this.get('isFetching') && this.get('hasMore')) {
       this.safeSet('isFetching', true);
       this.sendAction('action', bind(this, this.handleFetch));
     }
@@ -51,6 +61,24 @@ export default Em.Component.extend({
 
   fetchDidFail: function() {
     this.safeSet('isFetching', false);
+  },
+
+  contentPushed: Em.observer('content.length', function() {
+    Em.run.scheduleOnce('afterRender', this, function() {
+      if (this.isInView()) {
+        this.startFetching();
+      }
+    });
+  }),
+
+  isInView: function() {
+    var selfOffset = this.$().offset().top;
+    var $scrollable = this.get("$scrollable");
+    var scrollableBottom = $scrollable.height() + $scrollable.scrollTop();
+
+    var inView = selfOffset < scrollableBottom;
+
+    return inView;
   },
 
   isNearBottom: function() {
